@@ -1,0 +1,46 @@
+{
+  "mcpServers": {
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "description": "GitHub integration para gestión de PRs, issues y repositorios"
+    },
+    "postgres": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres"],
+      "env": {
+        "CONNECTION_STRING": "${POSTGRES_URL:-postgresql://localhost:5432/dev}"
+      },
+      "description": "Conexión a bases de datos PostgreSQL"
+    },
+    "filesystem": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "."],
+      "description": "Acceso seguro al sistema de archivos del proyecto"
+    },
+    "memory": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"],
+      "description": "Sistema de memoria persistente entre sesiones"
+    },
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp"],
+      "env": {
+        "BROWSER": "chromium",
+        "HEADLESS": "true"
+      },
+      "description": "Automatización de navegador para testing E2E"
+    },
+    "git": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-git", "."],
+      "description": "Análisis de repositorio Git"
+    }
+  }
+}
