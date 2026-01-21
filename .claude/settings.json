@@ -34,6 +34,16 @@
             "timeout": 60
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'if [[ \"$CLAUDE_TOOL_INPUT\" == *\"git commit\"* ]]; then mkdir -p .claude/checkpoints; echo \"{\\\"timestamp\\\": \\\"$(date -Iseconds)\\\", \\\"commit\\\": \\\"$(git rev-parse --short HEAD 2>/dev/null || echo none)\\\"}\" > .claude/checkpoints/$(date +%Y%m%d-%H%M%S).json; fi'",
+            "timeout": 10
+          }
+        ]
       }
     ],
     "Stop": [
@@ -42,7 +52,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/scripts/test-runner.sh",
+            "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/scripts/ralph-hook.sh",
             "timeout": 120
           }
         ]
@@ -53,6 +63,8 @@
     "allow": [
       "Bash(npm:*)",
       "Bash(npx:*)",
+      "Bash(bun:*)",
+      "Bash(bunx:*)",
       "Bash(git:*)",
       "Bash(docker:*)",
       "Bash(python:*)",
@@ -60,6 +72,11 @@
       "Bash(mkdir:*)",
       "Bash(ls:*)",
       "Bash(cat:*)",
+      "Bash(touch:*)",
+      "Bash(rm:*)",
+      "Bash(chmod:*)",
+      "Bash(cp:*)",
+      "Bash(mv:*)",
       "Read",
       "Write",
       "Edit",
@@ -77,7 +94,8 @@
       "Bash(rm -rf /)",
       "Bash(sudo rm)",
       "Bash(> /dev/)",
-      "Bash(dd if=)"
+      "Bash(dd if=)",
+      "Bash(chmod 777)"
     ]
   }
 }
