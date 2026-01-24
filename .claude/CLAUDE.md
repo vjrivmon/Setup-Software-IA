@@ -329,3 +329,213 @@ alias swarm="bash .claude/scripts/swarm-launch.sh"
 # Quick commits (atomic workflow)
 alias gcq='git add -A && git commit -m'
 ```
+
+---
+
+## Sistema de MVP Hardening
+
+### Comandos de Hardening
+
+| Comando                    | Descripción                                             |
+| -------------------------- | ------------------------------------------------------- |
+| `/mvp:harden <proyecto>`   | Flujo completo: entrevista → historias → tareas → swarm |
+| `/mvp:feedback <proyecto>` | Solo recopila feedback (genera FEEDBACK.md)             |
+| `/mvp:fix [proyecto]`      | Genera historias/tareas desde FEEDBACK.md existente     |
+
+### Flujo de Hardening (Post-MVP)
+
+```
+/mvp:feedback <proyecto>   → Entrevista de feedback (15-25 preguntas)
+        ↓
+    FEEDBACK.md            → Issues categorizados con severidad
+        ↓
+/mvp:fix                   → Genera historias H1XX y tareas T1XX
+        ↓
+/swarm:launch N            → Lanza N agentes paralelos
+        ↓
+/swarm:integrate           → Merge automático cuando terminen
+```
+
+### Categorías de Issues
+
+| Categoría       | Prefijo  | Descripción                         |
+| --------------- | -------- | ----------------------------------- |
+| **BUGS**        | BUG-XXX  | Errores de funcionamiento           |
+| **UX**          | UX-XXX   | Problemas de experiencia de usuario |
+| **PERFORMANCE** | PERF-XXX | Problemas de rendimiento            |
+| **SECURITY**    | SEC-XXX  | Vulnerabilidades de seguridad       |
+| **FEATURES**    | FEAT-XXX | Funcionalidades faltantes           |
+
+### Niveles de Severidad
+
+| Severidad    | Descripción                                        |
+| ------------ | -------------------------------------------------- |
+| **critical** | Bloquea uso, pérdida de datos, seguridad grave     |
+| **high**     | Funcionalidad core afectada, experiencia degradada |
+| **medium**   | Problema molesto pero con workaround               |
+| **low**      | Cosmético, edge case, nice-to-have                 |
+
+### Estructura de Archivos Hardening
+
+```
+.claude/
+├── feedback/
+│   └── FEEDBACK-<proyecto>.md    # Issues del feedback
+├── stories/
+│   ├── H101-<nombre>.md          # Historias de hardening (H1XX)
+│   └── STORIES-INDEX.md
+├── tasks/
+│   ├── T101-<nombre>.md          # Tareas de hardening (T1XX)
+│   └── TASKS-INDEX.md
+├── hardening/
+│   └── progress.json             # Estado del proceso
+└── templates/
+    └── FEEDBACK-TEMPLATE.md      # Template para feedback
+```
+
+### Skill: hardening-interviewer
+
+Entrevista estructurada en 6 fases:
+
+1. **BUGS** (3-5 preguntas) - Funcionalidades rotas
+2. **UX** (3-5 preguntas) - Fricciones en la experiencia
+3. **PERFORMANCE** (2-4 preguntas) - Lentitudes
+4. **SECURITY** (2-3 preguntas) - Vulnerabilidades
+5. **FEATURES** (2-4 preguntas) - Gaps funcionales
+6. **PRIORIZACIÓN** (2-3 preguntas) - Top 3 crítico
+
+### Reglas de Conversión Issues → Historias
+
+| Condición                     | Resultado                   |
+| ----------------------------- | --------------------------- |
+| 1 bug CRITICAL                | 1 historia H1XX             |
+| 2-3 bugs HIGH similares       | 1 historia agrupada         |
+| Issues UX de misma pantalla   | 1 historia                  |
+| 1 SEC issue (cualquier nivel) | 1 historia dedicada         |
+| Issues MEDIUM similares       | Agrupar en 1 historia       |
+| Issues LOW                    | Agrupar o diferir a backlog |
+
+### Ejemplo de Uso
+
+```bash
+# Flujo completo (entrevista + generación + swarm)
+> /mvp:harden flowlearn
+
+# O por partes:
+> /mvp:feedback flowlearn        # Solo entrevista
+> /mvp:fix                        # Genera historias/tareas
+> /swarm:launch 4                 # Lanza 4 agentes
+
+# Monitoreo
+> /swarm:status                   # Ver progreso
+> /swarm:integrate                # Merge cuando terminen
+```
+
+---
+
+## Sistema de Escalado MVP → SaaS Profesional
+
+### Comandos de Escalado
+
+| Comando                    | Descripción                                   |
+| -------------------------- | --------------------------------------------- |
+| `/scale:assess <proyecto>` | Evalúa MVP y genera roadmap de escalado       |
+| `/scale:iteration <fase>`  | Ejecuta iteración de mejora por fase          |
+| `/scale:checklist`         | Checklist interactivo de production-readiness |
+| `/scale:architecture`      | Analiza y propone mejoras arquitectónicas     |
+
+### Historias y Tareas Automatizadas
+
+| Comando                      | Descripción                                 |
+| ---------------------------- | ------------------------------------------- |
+| `/stories:auto <spec>`       | Genera historias con IA (técnica RaT)       |
+| `/tasks:parallel <historia>` | Divide en tareas paralelas con dependencias |
+| `/tasks:graph`               | Visualiza grafo de dependencias             |
+
+### Ejecución Paralela Mejorada
+
+| Comando             | Descripción                             |
+| ------------------- | --------------------------------------- |
+| `/swarm:launch <N>` | Lanza N agentes en terminales paralelas |
+| `/swarm:status`     | Dashboard en tiempo real                |
+| `/swarm:integrate`  | Activa agente integrador                |
+| `/swarm:stop`       | Detiene agentes y guarda estado         |
+
+### Shape Up Cycles
+
+| Comando                    | Descripción                      |
+| -------------------------- | -------------------------------- |
+| `/shapeup:pitch <idea>`    | Define pitch + apuestas          |
+| `/shapeup:cycle <semanas>` | Inicia ciclo (default 6 semanas) |
+| `/shapeup:betting`         | Sesión de betting: go/no-go      |
+
+### Fases de Escalado
+
+```
+Fase 0: Arquitectura Cloud-Native
+├── Containerización (Docker)
+├── Configuración por entorno
+└── Separación de concerns
+
+Fase 1: Auth + Security
+├── Autenticación robusta
+├── 2FA/MFA, SSO
+├── Rate limiting
+└── Headers de seguridad
+
+Fase 2: Billing + Monetización
+├── Integración Stripe/Paddle
+├── Gestión de subscripciones
+└── Webhooks + Invoicing
+
+Fase 3: Observability
+├── Error tracking (Sentry)
+├── Logging estructurado
+├── Métricas (PostHog)
+└── APM + Alertas
+
+Fase 4: Compliance
+├── GDPR ready
+├── Privacy Policy + ToS
+└── Cookie consent
+
+Fase 5: Deployment
+├── CI/CD pipeline
+├── Staging environment
+├── Feature flags
+└── Load testing
+```
+
+### Flujo MVP → SaaS (6 semanas)
+
+```
+SEMANA 0: /scale:assess → Roadmap
+SEMANA 1-2: /scale:iteration auth → Auth + Security
+SEMANA 3-4: /scale:iteration billing + monitoring
+SEMANA 5: /scale:iteration compliance + testing
+SEMANA 6: /scale:checklist → Deploy producción
+```
+
+### Agentes de Escalado
+
+| Agente          | Responsabilidad                            |
+| --------------- | ------------------------------------------ |
+| `08-integrator` | Merge automático, resolución de conflictos |
+| `09-scaler`     | Implementa mejoras de escalado             |
+| `10-qa-final`   | Testing E2E, validación pre-producción     |
+
+### Scripts de Escalado
+
+```bash
+# Swarm mejorado
+bash .claude/scripts/swarm-launcher-v2.sh 4
+
+# Integrador automático
+bash .claude/scripts/integrator.sh
+
+# Monitor en tiempo real
+bash .claude/scripts/parallel-monitor.sh
+
+# Resolver dependencias
+bash .claude/scripts/dependency-resolver.sh
+```
