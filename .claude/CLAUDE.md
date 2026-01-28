@@ -24,6 +24,9 @@ El sistema está diseñado para transformar ideas en MVPs funcionales mediante:
 | `/project:stack`              | Recomienda stack tecnológico para el proyecto    |
 | `/project:status`             | Muestra estado actual del proyecto               |
 | `/ux-expert`                  | Consulta experto UX/UI para decisiones de diseño |
+| `/mvp:auto-generate <spec>`   | SPEC → Historias → Tareas → Skills automático    |
+| `/skill:generate <task-id>`   | Genera skill especializada para una tarea        |
+| `/skill:batch <story-id>`     | Skills para todas las tareas de una historia     |
 
 ---
 
@@ -539,3 +542,187 @@ bash .claude/scripts/parallel-monitor.sh
 # Resolver dependencias
 bash .claude/scripts/dependency-resolver.sh
 ```
+
+---
+
+## Sistema de MVP Automation (SPEC → Skills)
+
+### Comandos de Automatización
+
+| Comando                     | Descripción                                         |
+| --------------------------- | --------------------------------------------------- |
+| `/mvp:auto-generate <spec>` | Flujo completo: SPEC → Historias → Tareas → Skills  |
+| `/skill:generate <task-id>` | Genera skill especializada para una tarea           |
+| `/skill:batch <story-id>`   | Genera skills para todas las tareas de una historia |
+
+### Flujo Automatizado Completo
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    MVP AUTOMATION FLOW                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  /project:interview <nombre>                                    │
+│           │                                                     │
+│           ▼                                                     │
+│     ┌─────────────┐                                             │
+│     │   SPEC.md   │  ← Entrevista profunda                      │
+│     └──────┬──────┘                                             │
+│            │                                                    │
+│            ▼ [Usuario confirma]                                 │
+│                                                                 │
+│  /mvp:auto-generate <spec>                                      │
+│           │                                                     │
+│           ├──────────────────────────────────────┐              │
+│           ▼                                      ▼              │
+│     ┌─────────────┐                       ┌─────────────┐       │
+│     │  H001.md    │                       │  H002.md    │  ...  │
+│     │  Historia 1 │                       │  Historia 2 │       │
+│     └──────┬──────┘                       └──────┬──────┘       │
+│            │                                     │              │
+│            ▼                                     ▼              │
+│     ┌─────────────┐                       ┌─────────────┐       │
+│     │  T001.md    │                       │  T003.md    │       │
+│     │  T002.md    │                       │  T004.md    │       │
+│     └──────┬──────┘                       └──────┬──────┘       │
+│            │                                     │              │
+│            ▼                                     ▼              │
+│     ┌─────────────┐                       ┌─────────────┐       │
+│     │ SKILL-T001  │                       │ SKILL-T003  │       │
+│     │ SKILL-T002  │                       │ SKILL-T004  │       │
+│     └─────────────┘                       └─────────────┘       │
+│                                                                 │
+│            │ [Skills generadas]                                 │
+│            ▼                                                    │
+│                                                                 │
+│  /swarm:launch N   ← Agentes con skills especializadas          │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Estructura de Skills Generadas
+
+```
+.claude/
+├── specs/
+│   └── PROYECTO-SPEC.md
+├── stories/
+│   ├── H001-feature-name.md
+│   ├── H002-another-feature.md
+│   └── STORIES-INDEX.md
+├── tasks/
+│   ├── T001-task-name.md
+│   ├── T002-task-name.md
+│   └── TASKS-INDEX.md
+└── skills/
+    └── generated/
+        └── PROYECTO/
+            ├── T001-skill/
+            │   └── SKILL.md
+            ├── T002-skill/
+            │   └── SKILL.md
+            └── INDEX.md
+```
+
+### Contenido de Skills Especializadas
+
+Cada skill generada incluye:
+
+1. **Conocimiento Contextual**
+   - Historia padre y criterios de aceptación
+   - Dependencias con otras tareas
+   - Stack tecnológico específico
+
+2. **Patrones Recomendados**
+   - Ejemplos de código del dominio
+   - Estructura de archivos sugerida
+   - APIs y librerías relevantes
+
+3. **Anti-patterns**
+   - Errores comunes a evitar
+   - Trampas específicas del stack
+
+4. **Checklist de Completitud**
+   - Criterios verificables para "done"
+   - Tests mínimos requeridos
+   - Puntos de integración
+
+### Categorías de Skills
+
+| Palabras Clave en Tarea       | Categoría  |
+| ----------------------------- | ---------- |
+| auth, login, session, token   | `auth`     |
+| database, schema, migration   | `database` |
+| api, endpoint, route, handler | `api`      |
+| ui, component, page, layout   | `ui`       |
+| test, spec, coverage          | `testing`  |
+| deploy, ci, cd, docker        | `devops`   |
+| style, css, tailwind, theme   | `styling`  |
+| cache, performance, optimize  | `perf`     |
+| security, validate, sanitize  | `security` |
+| docs, readme, comment         | `docs`     |
+
+### Ejemplo de Uso
+
+```bash
+# 1. Entrevista para generar SPEC
+> /project:interview NutriCoach
+
+# 2. Confirmar SPEC y generar todo automáticamente
+> /mvp:auto-generate .claude/specs/NutriCoach.md
+
+# Output:
+# - 12 historias generadas
+# - 45 tareas creadas
+# - 45 skills especializadas
+# - Índices actualizados
+
+# 3. Lanzar agentes con skills cargadas
+> /swarm:launch 4
+
+# Los agentes cargan automáticamente su skill correspondiente
+```
+
+### Opciones de Generación
+
+```bash
+# Solo historias
+/mvp:auto-generate <spec> --stories-only
+
+# Limitar tareas
+/mvp:auto-generate <spec> --max-tasks=20
+
+# Sin skills
+/mvp:auto-generate <spec> --no-skills
+
+# Regenerar desde historia específica
+/mvp:auto-generate <spec> --from-story=H003
+
+# Solo regenerar skills
+/mvp:auto-generate <spec> --regenerate-skills
+```
+
+### Técnica RaT (Refine and Thought)
+
+Las historias se generan usando el proceso iterativo RaT:
+
+1. **Thought**: Identificar funcionalidades core del usuario
+2. **Refine**: Verificar que cada historia es atómica y valiosa
+3. **Iterate**: Validar criterios INVEST
+
+### Integración con UX Skills
+
+Las skills generadas pueden heredar conocimiento de skills de UX existentes:
+
+- **Fitts Law**: Targets mínimos de 48px en mobile
+- **Hick's Law**: Reducir opciones por pantalla
+- **Jakob's Law**: Consistencia con patrones conocidos
+- **Miller's Law**: Máximo 7±2 elementos en listas
+
+### Beneficios del Sistema
+
+1. **Agentes más inteligentes**: Cada agente tiene conocimiento específico
+2. **Menos errores**: Anti-patterns documentados previenen problemas
+3. **Consistencia**: Patrones estandarizados en todo el proyecto
+4. **Trazabilidad**: Cada skill vinculada a su tarea e historia
+5. **Reutilización**: Skills sirven para proyectos similares del mismo dominio
