@@ -177,10 +177,32 @@ src/
 
 ---
 
+## Design-First Workflow
+
+Before generating any code, run `/design:full` to create architecture artifacts.
+The design phase produces C4 diagrams, domain models, user flows, and ADRs
+in `.claude/designs/{project}/`. Code generation (`/project:mvp`) requires
+a passing validation checklist.
+
+| Comando | Descripción |
+| --- | --- |
+| `/design:architecture <proyecto>` | Genera diagramas C4 y ADRs |
+| `/design:domain <proyecto>` | Modela el dominio (DDD + diagrama de clases) |
+| `/design:flows <proyecto>` | Diseña flujos de usuario y edge cases |
+| `/design:validate <proyecto>` | Verifica completitud de artefactos |
+| `/design:full <proyecto>` | Flujo completo orquestado (recomendado) |
+
+See `.claude/DESIGN-FIRST-GUIDE.md` for complete reference.
+
+---
+
 ## Agentes Disponibles
 
 | Agente             | Responsabilidad                           |
 | ------------------ | ----------------------------------------- |
+| `00-design-architect` | Genera diagramas C4 y ADRs            |
+| `00-domain-modeler`   | Modela dominio DDD y diagrama de clases |
+| `00-flow-designer`    | Diseña flujos, secuencias y edge cases |
 | `01-project-setup` | Inicializa estructura del proyecto        |
 | `02-git-cicd`      | Configura Git y CI/CD                     |
 | `03-architecture`  | Diseña arquitectura del sistema           |
@@ -198,6 +220,8 @@ src/
 - **Skills**: `.claude/skills/` - Skills reutilizables
 - **Commands**: `.claude/commands/` - Comandos personalizados
 - **Templates**: `.claude/templates/` - Templates de documentos
+- **Designs**: `.claude/designs/` - Artefactos de diseño por proyecto
+- **Design Guide**: `.claude/DESIGN-FIRST-GUIDE.md` - Referencia de Design-First
 
 ---
 

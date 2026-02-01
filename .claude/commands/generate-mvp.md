@@ -18,6 +18,10 @@ Genera un MVP completo y funcional a partir de una especificación SPEC.md exist
 
 1. Debe existir `.claude/specs/$ARGUMENTS.md`
 2. Si no existe, indicar al usuario que ejecute primero `/project:interview <nombre>`
+3. **Design Gate**: Verificar que `.claude/designs/$ARGUMENTS/VALIDATION-CHECKLIST.md` existe
+   y todos los items estan marcados como completados. Si no existe o tiene items pendientes,
+   indicar al usuario que ejecute `/design:full $ARGUMENTS` antes de generar codigo.
+   El diseno previo asegura que la arquitectura, dominio y flujos estan validados.
 
 ## Workflow de Ejecución
 
