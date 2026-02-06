@@ -20,6 +20,11 @@
             "type": "command",
             "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/scripts/pre-tool-validate.sh",
             "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/scripts/pre-commit-validate.sh",
+            "timeout": 120
           }
         ]
       }

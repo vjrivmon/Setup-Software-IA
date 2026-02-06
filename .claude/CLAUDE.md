@@ -30,6 +30,47 @@ El sistema está diseñado para transformar ideas en MVPs funcionales mediante:
 
 ---
 
+## Disciplined Dev Workflow
+
+Sistema de desarrollo disciplinado con validacion pre-commit, scope contracts y
+routing por complejidad. Previene buggy code post-deploy, over-engineering y
+scope creep.
+
+### Comandos de Desarrollo
+
+| Comando               | Descripcion                                |
+| --------------------- | ------------------------------------------ |
+| `/dev:quick <desc>`   | Cambios simples (1-3 archivos, sin plan)   |
+| `/dev:feature <desc>` | Features medios (4-10 archivos, por fases) |
+| `/dev:deploy`         | Deploy con pre-flight checks               |
+| `/dev:verify <url>`   | Verificacion read-only de produccion       |
+
+### Routing por Complejidad
+
+| Archivos | Comando          | Planificacion        |
+| -------- | ---------------- | -------------------- |
+| 1-3      | `/dev:quick`     | Ninguna              |
+| 4-10     | `/dev:feature`   | Ligera (fases)       |
+| 10+      | gurusup-workflow | Completa (plan mode) |
+
+### Pre-Commit Validation Gate
+
+Hook automatico que bloquea commits si:
+
+- Archivos staged fuera del scope contract
+- `tsc --noEmit` falla
+- `npm run build` falla
+- `npm run lint` falla
+
+### Scope Contract
+
+Archivo temporal `.claude/scope-contract.active.md` que define que archivos se
+pueden modificar. Se crea antes de implementar y se elimina post-commit.
+
+Ver: `.claude/skills/disciplined-dev/references/scope-contract-guide.md`
+
+---
+
 ## Stack Tecnológico por Defecto
 
 ### Web Full Stack
@@ -180,17 +221,17 @@ src/
 ## Design-First Workflow
 
 Before generating any code, run `/design:full` to create architecture artifacts.
-The design phase produces C4 diagrams, domain models, user flows, and ADRs
-in `.claude/designs/{project}/`. Code generation (`/project:mvp`) requires
-a passing validation checklist.
+The design phase produces C4 diagrams, domain models, user flows, and ADRs in
+`.claude/designs/{project}/`. Code generation (`/project:mvp`) requires a
+passing validation checklist.
 
-| Comando | Descripción |
-| --- | --- |
-| `/design:architecture <proyecto>` | Genera diagramas C4 y ADRs |
-| `/design:domain <proyecto>` | Modela el dominio (DDD + diagrama de clases) |
-| `/design:flows <proyecto>` | Diseña flujos de usuario y edge cases |
-| `/design:validate <proyecto>` | Verifica completitud de artefactos |
-| `/design:full <proyecto>` | Flujo completo orquestado (recomendado) |
+| Comando                           | Descripción                                  |
+| --------------------------------- | -------------------------------------------- |
+| `/design:architecture <proyecto>` | Genera diagramas C4 y ADRs                   |
+| `/design:domain <proyecto>`       | Modela el dominio (DDD + diagrama de clases) |
+| `/design:flows <proyecto>`        | Diseña flujos de usuario y edge cases        |
+| `/design:validate <proyecto>`     | Verifica completitud de artefactos           |
+| `/design:full <proyecto>`         | Flujo completo orquestado (recomendado)      |
 
 See `.claude/DESIGN-FIRST-GUIDE.md` for complete reference.
 
@@ -198,18 +239,18 @@ See `.claude/DESIGN-FIRST-GUIDE.md` for complete reference.
 
 ## Agentes Disponibles
 
-| Agente             | Responsabilidad                           |
-| ------------------ | ----------------------------------------- |
-| `00-design-architect` | Genera diagramas C4 y ADRs            |
-| `00-domain-modeler`   | Modela dominio DDD y diagrama de clases |
-| `00-flow-designer`    | Diseña flujos, secuencias y edge cases |
-| `01-project-setup` | Inicializa estructura del proyecto        |
-| `02-git-cicd`      | Configura Git y CI/CD                     |
-| `03-architecture`  | Diseña arquitectura del sistema           |
-| `04-ui-ux`         | Implementa interfaces (invoca /ux-expert) |
-| `05-testing`       | Escribe tests (TDD)                       |
-| `06-documentation` | Genera documentación                      |
-| `07-deployment`    | Configura despliegue                      |
+| Agente                | Responsabilidad                           |
+| --------------------- | ----------------------------------------- |
+| `00-design-architect` | Genera diagramas C4 y ADRs                |
+| `00-domain-modeler`   | Modela dominio DDD y diagrama de clases   |
+| `00-flow-designer`    | Diseña flujos, secuencias y edge cases    |
+| `01-project-setup`    | Inicializa estructura del proyecto        |
+| `02-git-cicd`         | Configura Git y CI/CD                     |
+| `03-architecture`     | Diseña arquitectura del sistema           |
+| `04-ui-ux`            | Implementa interfaces (invoca /ux-expert) |
+| `05-testing`          | Escribe tests (TDD)                       |
+| `06-documentation`    | Genera documentación                      |
+| `07-deployment`       | Configura despliegue                      |
 
 ---
 
