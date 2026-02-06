@@ -34,15 +34,20 @@ if [ -f "$SCOPE_CONTRACT" ]; then
         STAGED_FILES=$(cd "$PROJECT_DIR" && git diff --cached --name-only 2>/dev/null || true)
 
         if [ -n "$STAGED_FILES" ]; then
+            # Tambien extraer archivos de "Files to create"
+            ALLOWED_CREATE=$(grep -A 50 'Files to create' "$SCOPE_CONTRACT" | grep -oE '`[^`]+`' | tr -d '`' | head -20)
+            ALL_ALLOWED=$(printf '%s\n%s' "$ALLOWED_FILES" "$ALLOWED_CREATE" | sort -u | grep -v '^$')
+
             while IFS= read -r staged_file; do
                 MATCH=false
                 while IFS= read -r allowed; do
-                    # Comprobar match exacto o como patron glob
-                    if [[ "$staged_file" == "$allowed" ]] || [[ "$staged_file" == *"$allowed"* ]]; then
+                    [ -z "$allowed" ] && continue
+                    # Match exacto por path completo o por nombre de archivo
+                    if [[ "$staged_file" == "$allowed" ]] || [[ "$staged_file" == */"$allowed" ]] || [[ "$allowed" == */"$staged_file" ]]; then
                         MATCH=true
                         break
                     fi
-                done <<< "$ALLOWED_FILES"
+                done <<< "$ALL_ALLOWED"
 
                 if [ "$MATCH" = false ]; then
                     ERRORS+=("SCOPE: '$staged_file' no esta en el scope contract")

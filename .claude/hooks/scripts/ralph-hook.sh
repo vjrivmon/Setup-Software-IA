@@ -27,6 +27,7 @@ if [ -f "$PROJECT_DIR/.claude/COMPLETE" ]; then
     echo -e "${GREEN}✅ TAREA COMPLETADA${NC}"
     rm -f "$PROJECT_DIR/.claude/COMPLETE" "$PROJECT_DIR/.claude/ralph-active"
     rm -f "$PROJECT_DIR/.claude/PROMPT.md"
+    rm -f "$PROJECT_DIR/.claude/.ralph-iteration"
 
     # Guardar log de sesión completada
     mkdir -p "$PROJECT_DIR/.claude/logs"

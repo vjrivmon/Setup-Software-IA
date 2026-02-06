@@ -45,7 +45,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'if [[ \"$CLAUDE_TOOL_INPUT\" == *\"git commit\"* ]]; then mkdir -p .claude/checkpoints; echo \"{\\\"timestamp\\\": \\\"$(date -Iseconds)\\\", \\\"commit\\\": \\\"$(git rev-parse --short HEAD 2>/dev/null || echo none)\\\"}\" > .claude/checkpoints/$(date +%Y%m%d-%H%M%S).json; fi'",
+            "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/scripts/post-commit-checkpoint.sh",
             "timeout": 10
           }
         ]

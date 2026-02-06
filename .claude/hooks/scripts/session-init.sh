@@ -9,16 +9,28 @@ PROJECT_DIR="${CLAUDE_PROJECT_DIR:-.}"
 
 echo "Inicializando sesión de desarrollo..."
 
-# 1. Cargar variables de entorno si existen
+# 1. Cargar variables de entorno si existen (safe parsing, sin export $())
+load_env_file() {
+    local env_file="$1"
+    while IFS= read -r line || [ -n "$line" ]; do
+        # Saltar comentarios y lineas vacias
+        [[ "$line" =~ ^[[:space:]]*# ]] && continue
+        [[ -z "${line// }" ]] && continue
+        # Solo exportar lineas con formato KEY=VALUE valido
+        if [[ "$line" =~ ^[a-zA-Z_][a-zA-Z0-9_]*= ]]; then
+            export "$line"
+        fi
+    done < "$env_file"
+}
+
 if [ -f "$PROJECT_DIR/.env" ]; then
     echo "Cargando variables de entorno desde .env..."
-    # Exportar variables sin comentarios
-    export $(grep -v '^#' "$PROJECT_DIR/.env" | xargs -d '\n' 2>/dev/null) || true
+    load_env_file "$PROJECT_DIR/.env"
 fi
 
 if [ -f "$PROJECT_DIR/.env.local" ]; then
     echo "Cargando variables locales desde .env.local..."
-    export $(grep -v '^#' "$PROJECT_DIR/.env.local" | xargs -d '\n' 2>/dev/null) || true
+    load_env_file "$PROJECT_DIR/.env.local"
 fi
 
 # 2. Verificar Node.js y dependencias

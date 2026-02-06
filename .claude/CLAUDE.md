@@ -314,8 +314,8 @@ See `.claude/DESIGN-FIRST-GUIDE.md` for complete reference.
 2. /project:interview <nombre> → Refina especificación
 3. Crear historias             → template USER-STORY.md
 4. Dividir en tareas           → template TASK.md
-5. bash .claude/scripts/swarm-launch.sh 4 → Lanza agentes paralelos
-6. bash .claude/scripts/worktree-manager.sh status → Monitorear
+5. /swarm:launch 4                       → Lanza agentes paralelos
+6. /swarm:status                          → Monitorear
 ```
 
 ### Estructura de Directorios Extendida
@@ -595,7 +595,7 @@ SEMANA 6: /scale:checklist → Deploy producción
 ### Scripts de Escalado
 
 ```bash
-# Swarm mejorado
+# Swarm (usa /swarm:launch como alternativa)
 bash .claude/scripts/swarm-launcher-v2.sh 4
 
 # Integrador automático
@@ -607,6 +607,10 @@ bash .claude/scripts/parallel-monitor.sh
 # Resolver dependencias
 bash .claude/scripts/dependency-resolver.sh
 ```
+
+> **Nota**: `swarm-launch.sh` (v1, 347 lineas) y `swarm-launcher-v2.sh` (v2, 264
+> lineas) coexisten. v2 es mas compacto y acepta `--tasks` flag. Usa v2 o el
+> comando `/swarm:launch` que lo invoca automaticamente.
 
 ---
 
